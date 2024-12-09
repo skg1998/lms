@@ -1,5 +1,5 @@
 package com.lms.api.services;
 
 public interface EasterEggService {
-	public String getRandomNumberFact();
+	public String getRandomNumberFact(int number);
 }

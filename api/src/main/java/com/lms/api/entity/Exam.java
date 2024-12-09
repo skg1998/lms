@@ -10,7 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -32,10 +33,16 @@ public class Exam {
 	private Long examId;
 	
 	@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subject_id", referencedColumnName = "student_id")
+    @JoinColumn(name = "subject_id", referencedColumnName = "subject_id")
 	private Subject subject;
 	
-	@OneToMany(mappedBy ="lms_student",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	//@OneToMany(mappedBy ="lms_student",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+        name = "exam_student",
+        joinColumns = @JoinColumn(name = "exam_id"),
+        inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
 	private List<Student> students;
 	
 	private LocalDateTime updatedAt;

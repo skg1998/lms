@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lms.api.dto.AppResponse;
 import com.lms.api.dto.StudentDto;
+import com.lms.api.dto.StudentRequest;
 import com.lms.api.dto.SuccessResponse;
 import com.lms.api.services.StudentService;
 
@@ -27,7 +28,7 @@ public class StudentController {
 	private final StudentService studentService;
     
     @GetMapping("/{studentId}")
-    public ResponseEntity<AppResponse> getStudentById(@PathVariable Long studentId) {
+    public ResponseEntity<AppResponse> getStudentById(@PathVariable("studentId") Long studentId) {
         StudentDto studentDto = studentService.getStudent(studentId);
         return responseMaker("fetch student detail successfully", HttpStatus.OK, studentDto);  
     }
@@ -39,9 +40,9 @@ public class StudentController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<AppResponse> registerStudent(@RequestBody StudentDto studentDto) {
-    	studentService.registerSudent(studentDto);
-        return responseMaker("create new student successfully", HttpStatus.OK, null);  
+    public ResponseEntity<AppResponse> registerStudent(@RequestBody StudentRequest studentRequest) {
+    	studentService.registerSudent(studentRequest);
+        return responseMaker("create new student successfully", HttpStatus.CREATED, null);  
     }
 
     @PutMapping("/")
@@ -51,7 +52,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/{studentId}")
-    public ResponseEntity<AppResponse> deleteStudent(@PathVariable Long studentId) {
+    public ResponseEntity<AppResponse> deleteStudent(@PathVariable("studentId") Long studentId) {
     	studentService.deleteStudent(studentId);
         return responseMaker("delete student successfully", HttpStatus.OK, null);
     }

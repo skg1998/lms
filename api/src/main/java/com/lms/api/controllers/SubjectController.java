@@ -21,13 +21,13 @@ import com.lms.api.services.SubjectService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/v1/subject")
+@RequestMapping("api/v1/subjects")
 @RequiredArgsConstructor
 public class SubjectController {
 	private final SubjectService subjectService;
 	
 	@GetMapping("/{subjectId}")
-    public ResponseEntity<AppResponse> getSubjectById(@PathVariable Long subjectId) {
+    public ResponseEntity<AppResponse> getSubjectById(@PathVariable("subjectId") Long subjectId) {
         SubjectDto subjectDto = subjectService.getSubject(subjectId);
         return responseMaker("fetch Subject detail successfully", HttpStatus.OK, subjectDto);  
     }
@@ -39,19 +39,19 @@ public class SubjectController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<AppResponse> registerSubject(@RequestBody SubjectDto SubjectDto) {
-    	subjectService.createSubject(SubjectDto);
+    public ResponseEntity<AppResponse> registerSubject(@RequestBody SubjectDto subjectDto) {
+    	subjectService.createSubject(subjectDto);
         return responseMaker("create new Subject successfully", HttpStatus.OK, null);  
     }
 
     @PutMapping("/")
-    public ResponseEntity<AppResponse> updateSubject(@RequestBody SubjectDto SubjectDto) {
-    	subjectService.updateSubject(SubjectDto);
+    public ResponseEntity<AppResponse> updateSubject(@RequestBody SubjectDto subjectDto) {
+    	subjectService.updateSubject(subjectDto);
         return responseMaker("update Subject successfully", HttpStatus.OK, null);  
     }
 
     @DeleteMapping("/{subjectId}")
-    public ResponseEntity<AppResponse> deleteSubject(@PathVariable Long subjectId) {
+    public ResponseEntity<AppResponse> deleteSubject(@PathVariable("subjectId") Long subjectId) {
     	subjectService.deleteSubject(subjectId);
         return responseMaker("delete Subject successfully", HttpStatus.OK, null);
     }

@@ -1,8 +1,8 @@
 package com.lms.api.serviceImpls;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -25,58 +25,50 @@ public class SubjectServiceImpl implements SubjectService{
 	}
 
 	@Override
-	public void updateSubject(SubjectDto subjectDto) {
-		Optional<Subject> optionalSubject = subjectRepository.findById(subjectDto.getSubjectId());
-		Subject subject = optionalSubject.orElseThrow(()-> new NotFoundException("Subject not found for given subjectid"));
-		
-		subjectRepository.save(subject);
-	}
+    public void updateSubject(SubjectDto subjectDto) {
+        Subject subject = subjectRepository.findById(subjectDto.getSubjectId())
+                .orElseThrow(() -> new NotFoundException("Subject not found for the given subject ID"));
+
+        subject.setSubjectName(subjectDto.getSubjectName());
+        subjectRepository.save(subject);
+    }
 
 	@Override
-	public void deleteSubject(Long subjectId) {
-		Optional<Subject> optionalSubject = subjectRepository.findById(subjectId);
-		Subject subject = optionalSubject.orElseThrow(()-> new NotFoundException("Subject not found for given subjectid"));
-		
-		subjectRepository.delete(subject);
-	}
+    public void deleteSubject(Long subjectId) {
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new NotFoundException("Subject not found for the given subject ID"));
+
+        subjectRepository.delete(subject);
+    }
 
 	@Override
-	public List<SubjectDto> getAllSubject() {
-		List<Subject> subjects = subjectRepository.findAll();
-		List<SubjectDto> subjectDtos = new ArrayList<>();
-		subjects.forEach(subject -> {
-			SubjectDto subjectDto = this.mapToSubjectDto(subject);
-			subjectDtos.add(subjectDto);
-		});
-		return subjectDtos;
-	}
+    public List<SubjectDto> getAllSubject() {
+        List<Subject> subjects = subjectRepository.findAll();
+        return subjects.stream().map(this::mapToSubjectDto).collect(Collectors.toList());
+    }
 
 	@Override
-	public SubjectDto getSubject(Long subjectId) {
-		Optional<Subject> optionalSubject = subjectRepository.findById(subjectId);
-		Subject subject = optionalSubject.orElseThrow(()-> new NotFoundException("Subject not found for given subjectid"));
-		
-		return this.mapToSubjectDto(subject);
-	}
+    public SubjectDto getSubject(Long subjectId) {
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new NotFoundException("Subject not found for the given subject ID"));
+        return mapToSubjectDto(subject);
+    }
 	
 	private Subject mapToSubjectEntity(SubjectDto subjectDto) {
-		Subject subject = new Subject();
-		subject.setSubjectId(subjectDto.getSubjectId());
-		subject.setSubjectName(subjectDto.getSubjectName());
-		//subjectDto.setStudents(null);
-		subject.setCreatedAt(subjectDto.getCreatedAt());
-		subject.setUpdatedAt(subjectDto.getUpdatedAt());
-		return subject;
-	}
+        Subject subject = new Subject();
+        subject.setSubjectName(subjectDto.getSubjectName());
+        subject.setCreatedAt(subjectDto.getCreatedAt());
+        subject.setUpdatedAt(subjectDto.getUpdatedAt());
+        return subject;
+    }
 	
 	private SubjectDto mapToSubjectDto(Subject subject) {
-		SubjectDto subjectDto = new SubjectDto();
-		subjectDto.setSubjectId(subject.getSubjectId());
-		subjectDto.setSubjectName(subject.getSubjectName());
-		//subjectDto.setStudents(null);
-		subjectDto.setCreatedAt(subject.getCreatedAt());
-		subjectDto.setUpdatedAt(subject.getUpdatedAt());
-		return subjectDto;
-	}
+        SubjectDto subjectDto = new SubjectDto();
+        subjectDto.setSubjectId(subject.getSubjectId());
+        subjectDto.setSubjectName(subject.getSubjectName());
+        subjectDto.setCreatedAt(subject.getCreatedAt());
+        subjectDto.setUpdatedAt(subject.getUpdatedAt());
+        return subjectDto;
+    }
 
 }

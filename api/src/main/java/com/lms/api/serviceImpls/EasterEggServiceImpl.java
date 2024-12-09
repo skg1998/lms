@@ -12,12 +12,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EasterEggServiceImpl implements EasterEggService{
 	public final RestTemplate restTemplate;
-	public static final String URL = "http://numbersapi.com/random/trivia";
+	public static final String URL = "http://numbersapi.com/";
 
 	@Override
-	public String getRandomNumberFact() {
+	public String getRandomNumberFact(int number) {
 		try {
-            return restTemplate.getForObject(URL, String.class);
+            return restTemplate.getForObject(URL+number, String.class);
         } catch (Exception e) {
            throw new NumberApiFetchException("Failed to fetch number fact");
         }
